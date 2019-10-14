@@ -18,7 +18,7 @@ public:
 	int head;
 	int size;
 
-	//make a private function to resize the array (automatically private because it is not under the public thing
+	//make a private function to resize the array (automatically private because it is not under the public thing)
 	void resizeArray()
 	{
 		//make a new array

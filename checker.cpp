@@ -53,46 +53,68 @@ void Checker::readFile(string inFileName)
 	// if the file is open and working 
 	while (getline(inFile, line))
 	{
+		bool inQuotes = true;
 		//iterate through the file
 		for (int i = 0; i < line.length(); ++i)
 		{
-			//check to see if the file has a parathesis and add it to the correct count
-			if (line[i] == '(')
+			//check to see if the delimiter is in quotations - if so forget it exists
+			if (line[i] == '\"' || line[i] == '\'')
 			{
-				leftPCount++;
-				symbolStack->push('(');
-				locationStack->push(lineNum);
+				if (inQuotes == false)
+				{
+					inQuotes = true;
+					cout << "true" << endl;
+				}
+				else
+				{
+					cout << "false" << endl;
+					inQuotes = false;
+				}
 			}
-			if (line[i] == ')')
+			if (inQuotes == false)
 			{
-				rightPCount++;
-				symbolStack->push(')');
-				locationStack->push(lineNum);
+				continue;
 			}
-			if (line[i] == '[')
-			{
-				leftBCount++;
-				symbolStack->push ('[');
-				locationStack->push(lineNum);
-			}
-			if (line[i] == ']')
-			{
-				rightBCount++;
-				symbolStack->push (']');
-				locationStack->push(lineNum);
-			}
-			if (line[i] == '{')
-			{
-				leftWCount++;
-				symbolStack->push ('{');
-				locationStack->push(lineNum);
-			}
-			if (line[i] == '}')
-			{
-				rightWCount++;
-				symbolStack->push('}');
-				locationStack->push(lineNum);
-			}
+			//	cout << "entered bool loop" << endl;
+				//check to see if the file has a parathesis and add it to the correct count
+				if (line[i] == '(')
+				{
+					leftPCount++;
+					symbolStack->push('(');
+					locationStack->push(lineNum);
+				}
+				if (line[i] == ')')
+				{
+					rightPCount++;
+					symbolStack->push(')');
+					locationStack->push(lineNum);
+				}
+				if (line[i] == '[')
+				{
+					leftBCount++;
+					symbolStack->push('[');
+					locationStack->push(lineNum);
+				}
+				if (line[i] == ']')
+				{
+					rightBCount++;
+					symbolStack->push(']');
+					locationStack->push(lineNum);
+				}
+				if (line[i] == '{')
+				{
+					leftWCount++;
+					symbolStack->push('{');
+					locationStack->push(lineNum);
+				}
+				if (line[i] == '}')
+				{
+					rightWCount++;
+					symbolStack->push('}');
+					locationStack->push(lineNum);
+				}
+				
+			
 		}
 		lineNum++;
 		cout << "lineNum: " << lineNum << " " << line << endl;
@@ -107,130 +129,130 @@ void Checker::readFile(string inFileName)
 	cout << "rightWCount: " << rightWCount << endl;
 }
 
-void Checker::checkDelim()
-{
-	cout << "sArray: " << symbolStack->sArray << endl;
-	//check to see if there is an even number of delimiters
-	//if there is an even number the file is fine, and exit the program.
-	if ((rightPCount + leftPCount) % 2 == 0 && (rightBCount + leftBCount) % 2 == 0 && (rightWCount + leftWCount) % 2 == 0)
-	{
-		cout << "The file has no missing delimiters. You're good bro." << endl;
-	}
-
-	//if there is an odd number of delimiters it means one is missing
-	else
-	{
-		//if missing a parenthesis
-		if (leftPCount < rightPCount)
-		{
-			if (symbolStack->sArray[1] != '(')
-			{
-				if (symbolStack->sArray[1] != '[')
-				{
-					string message = "Expecting '(', found '[' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-				if (symbolStack->sArray[1] != '{')
-				{
-					string message = "Expecting '(', found '{' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-			}
-		}
-		if (leftPCount > rightPCount)
-		{
-			if (symbolStack->sArray[2] != ')')
-			{
-				if (symbolStack->sArray[2] == ']')
-				{
-					string message = "Expecting ')', found ']' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-				if (symbolStack->sArray[2] == '}')
-				{
-					string message = "Expecting ')', found '}' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-			}
-		}
-		//if missing a bracket
-		if (leftBCount < rightBCount)
-		{
-			cout << "SYmbolStack array 3: " << symbolStack->sArray[3] << endl;
-			if (symbolStack->sArray[3] != '[')
-			{
-				if (symbolStack->sArray[3] == '(')
-				{
-					string message = "Expecting '[', found '(' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-				if (symbolStack->sArray[3] != '{')
-				{
-					string message = "Expecting '[', found '{' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-			}
-		}
-		if (leftBCount > rightBCount)
-		{
-			if (symbolStack->sArray[4] != ']')
-			{
-				if (symbolStack->sArray[4] != ')')
-				{
-					string message = "Expecting ']', found ')' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-				if (symbolStack->sArray[4] != '}')
-				{
-					string message = "Expecting ']', found '}' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-			}
-		}
-		//if missing a wiggly bracket
-		if (leftWCount < rightWCount)
-		{
-			if (symbolStack->sArray[5] != '{')
-			{
-				if (symbolStack->sArray[5] != '(')
-				{
-					string message = "Expecting '{', found '(' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-				if (symbolStack->sArray[5] != '[')
-				{
-					string message = "Expecting '{', found '[' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-			}
-		}
-		//check to see if the user forgot the last closing wiggly bracket at the end of the file
-		if (leftWCount > rightWCount)
-		{
-			if (symbolStack->sArray[6] != symbolStack->peek())
-			{
-				if (symbolStack->sArray[6] != ')')
-				{
-					string message = "Expecting '}', found ')' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-				if (symbolStack->sArray[6] != ']')
-				{
-					string message = "Expecting '}', found ']' at line " + to_string(locationStack->peek());
-					throw runtime_error(message);
-				}
-			}
-			if (symbolStack->peek() != '}')
-			{
-				string message = "You are missing a '}' at the end of your file (line  " + to_string(lineNum + 1) + ')';
-				throw runtime_error(message);
-			}
-		}
-
-		//reset the values
-		rightPCount = 0, leftPCount = 0, rightBCount = 0, leftBCount = 0, rightWCount = 0, leftWCount = 0, lineNum = 1;
-	}
-}
+//void Checker::checkDelim()
+//{
+//	cout << "sArray: " << symbolStack->sArray << endl;
+//	//check to see if there is an even number of delimiters
+//	//if there is an even number the file is fine, and exit the program.
+//	if ((rightPCount + leftPCount) % 2 == 0 && (rightBCount + leftBCount) % 2 == 0 && (rightWCount + leftWCount) % 2 == 0)
+//	{
+//		cout << "The file has no missing delimiters. You're good bro." << endl;
+//	}
+//
+//	//if there is an odd number of delimiters it means one is missing
+//	else
+//	{
+//		//if missing a parenthesis
+//		if (leftPCount < rightPCount)
+//		{
+//			if (symbolStack->sArray[1] != '(')
+//			{
+//				if (symbolStack->sArray[1] != '[')
+//				{
+//					string message = "Expecting '(', found '[' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//				if (symbolStack->sArray[1] != '{')
+//				{
+//					string message = "Expecting '(', found '{' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//			}
+//		}
+//		if (leftPCount > rightPCount)
+//		{
+//			if (symbolStack->sArray[2] != ')')
+//			{
+//				if (symbolStack->sArray[2] == ']')
+//				{
+//					string message = "Expecting ')', found ']' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//				if (symbolStack->sArray[2] == '}')
+//				{
+//					string message = "Expecting ')', found '}' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//			}
+//		}
+//		//if missing a bracket
+//		if (leftBCount < rightBCount)
+//		{
+//			cout << "SYmbolStack array 3: " << symbolStack->sArray[3] << endl;
+//			if (symbolStack->sArray[3] != '[')
+//			{
+//				if (symbolStack->sArray[3] == '(')
+//				{
+//					string message = "Expecting '[', found '(' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//				if (symbolStack->sArray[3] != '{')
+//				{
+//					string message = "Expecting '[', found '{' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//			}
+//		}
+//		if (leftBCount > rightBCount)
+//		{
+//			if (symbolStack->sArray[4] != ']')
+//			{
+//				if (symbolStack->sArray[4] != ')')
+//				{
+//					string message = "Expecting ']', found ')' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//				if (symbolStack->sArray[4] != '}')
+//				{
+//					string message = "Expecting ']', found '}' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//			}
+//		}
+//		//if missing a wiggly bracket
+//		if (leftWCount < rightWCount)
+//		{
+//			if (symbolStack->sArray[5] != '{')
+//			{
+//				if (symbolStack->sArray[5] != '(')
+//				{
+//					string message = "Expecting '{', found '(' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//				if (symbolStack->sArray[5] != '[')
+//				{
+//					string message = "Expecting '{', found '[' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//			}
+//		}
+//		//check to see if the user forgot the last closing wiggly bracket at the end of the file
+//		if (leftWCount > rightWCount)
+//		{
+//			if (symbolStack->sArray[6] != symbolStack->peek())
+//			{
+//				if (symbolStack->sArray[6] != ')')
+//				{
+//					string message = "Expecting '}', found ')' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//				if (symbolStack->sArray[6] != ']')
+//				{
+//					string message = "Expecting '}', found ']' at line " + to_string(locationStack->peek());
+//					throw runtime_error(message);
+//				}
+//			}
+//			if (symbolStack->peek() != '}')
+//			{
+//				string message = "You are missing a '}' at the end of your file (line  " + to_string(lineNum + 1) + ')';
+//				throw runtime_error(message);
+//			}
+//		}
+//
+//		//reset the values
+//		rightPCount = 0, leftPCount = 0, rightBCount = 0, leftBCount = 0, rightWCount = 0, leftWCount = 0, lineNum = 1;
+//	}
+//}
 
 
 void Checker::checkDelim2()
@@ -240,8 +262,9 @@ void Checker::checkDelim2()
 	{
 		//get the top element in the stack and pop it
 		char currentD = symbolStack->pop();
+		//cout << "currentD: " << currentD << endl;
 		//iterate through the stack and check to see if hey are paired
-		for (int i = 0; i <= symbolStack->head; ++i)//may need to swap this
+		for (int i = 0; i <= symbolStack->head+1; ++i)//may need to swap this
 		{
 			cout << "symbolstack: " << symbolStack->sArray[i] << endl;
 
@@ -299,8 +322,5 @@ void Checker::checkDelim2()
 				}
 			}
 		}
-
 	}
-
-
 }

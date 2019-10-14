@@ -20,6 +20,6 @@ public:
 	GenStack<int>* locationStack;
 
 	void readFile(string inFileName);
-	void checkDelim();
+	//void checkDelim();
 	void checkDelim2();
 };
