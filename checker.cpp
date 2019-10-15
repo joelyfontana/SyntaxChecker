@@ -12,7 +12,6 @@ Syntax Checker*/
 using namespace std;
 
 string line;
-string tmp;
 int lineNum = 0;
 int rightPCount =0,leftPCount =0, rightBCount=0, leftBCount=0, rightWCount=0, leftWCount=0;
 string answer;
@@ -63,11 +62,11 @@ void Checker::readFile(string inFileName)
 				if (inQuotes == false)
 				{
 					inQuotes = true;
-					cout << "true" << endl;
+					//cout << "true" << endl;
 				}
 				else
 				{
-					cout << "false" << endl;
+					//cout << "false" << endl;
 					inQuotes = false;
 				}
 			}
@@ -113,14 +112,11 @@ void Checker::readFile(string inFileName)
 					symbolStack->push('}');
 					locationStack->push(lineNum);
 				}
-				
-			
 		}
 		lineNum++;
 		cout << "lineNum: " << lineNum << " " << line << endl;
-		
+
 	}
-	
 	cout << "leftPCount: " << leftPCount << endl;
 	cout << "rightPCount: " << rightPCount << endl;
 	cout << "leftBCount: " << leftBCount << endl;
@@ -254,20 +250,45 @@ void Checker::readFile(string inFileName)
 //	}
 //}
 
-
 void Checker::checkDelim2()
 {
+	int countOpens =0;
 	//make sure the stack is not empty
-	while (symbolStack->isEmpty() == false)
-	{
-		//get the top element in the stack and pop it
-		char currentD = symbolStack->pop();
-		//cout << "currentD: " << currentD << endl;
+	for(int curDIndex = 0; curDIndex <= symbolStack->head; ++curDIndex)
+	{	
+		char currentD = symbolStack->sArray[curDIndex];
 		//iterate through the stack and check to see if hey are paired
-		for (int i = 0; i <= symbolStack->head+1; ++i)//may need to swap this
-		{
-			cout << "symbolstack: " << symbolStack->sArray[i] << endl;
+		for (int i = curDIndex; i <= symbolStack->head; ++i)//may need to swap this
+		{	
+			
+			//cout << "currentD: " << currentD << endl;
+			//cout << "locationstack: " << locationStack->sArray[i] + 1 << endl;
+			//cout << "symbolstack: " << symbolStack->sArray[i] << endl;
 
+			//tracks potential pairs
+			//if (symbolStack->sArray[i] == '(' || symbolStack->sArray[i] == '[' || symbolStack->sArray[i] == '{')
+			//{
+			//	countOpens++;
+			//	continue;
+			//}
+
+			//else if (symbolStack->sArray[i] == ')' || symbolStack->sArray[i] == '}' || symbolStack->sArray[i] == ']')
+			//{
+			//	if (countOpens > 0)
+			//	{
+			//		//cout << "opencount: " << countOpens << endl;
+			//		countOpens--;
+			//		continue;
+			//	}
+			//}
+			//	
+			//if (countOpens > 0)
+			//{
+			//	//cout << "count open:" << countOpens << endl;
+			//	continue;
+			//}
+			
+			string message = "The program will now exit.";
 			if (currentD == '(')
 			{
 				if (symbolStack->sArray[i] == ')')
@@ -276,13 +297,12 @@ void Checker::checkDelim2()
 				}
 				else if(symbolStack->sArray[i] == '}')
 					{
-					cout << "fuck" << endl;
-					string message = "Expected ')', found '}'";
+					cout << "Expected ')', found '}' at line " << locationStack->sArray[i+1]<<endl;
 					throw runtime_error(message);
 					}
 				else if (symbolStack->sArray[i] == ']')
 				{
-					string message = "Expected ')', found ']'";
+					cout << "Expected ')', found ']'at line " << locationStack->sArray[i+1]<< endl;
 					throw runtime_error(message);
 				}
 			}
@@ -294,13 +314,12 @@ void Checker::checkDelim2()
 				}
 				else if (symbolStack->sArray[i] == ')')
 				{
-					cout << "fuck2" << endl;
-					string message = "Expected '}', found ')'";
+					cout << "Expected '}', found ')'at line " << locationStack->sArray[i + 1] << endl;
 					throw runtime_error(message);
 				}
 				else if (symbolStack->sArray[i] == ']')
 				{
-					string message = "Expected '}', found ']'";
+					cout << "Expected '}', found ']'at line " << locationStack->sArray[i + 1] << endl;
 					throw runtime_error(message);
 				}
 			}
@@ -312,15 +331,23 @@ void Checker::checkDelim2()
 				}
 				else if (symbolStack->sArray[i] == '}')
 				{
-					string message = "Expected ']', found '}'";
+					cout << "Expected ']', found '}'at line " << locationStack->sArray[i + 1] << endl;
 					throw runtime_error(message);
 				}
 				else if (symbolStack->sArray[i] == ')')
 				{
-					string message = "Expected ']', found ')'";
+					cout << "Expected ']', found ')'at line " << locationStack->sArray[i + 1] << endl;
 					throw runtime_error(message);
 				}
 			}
+			//check the last delimite
+			if (symbolStack->peek() != '}')
+			{
+				string message = "You are missing a '}' at the end of your file (line  " + to_string(lineNum) + ')';
+				throw runtime_error(message);
+			}
 		}
 	}
+	//reset the values
+	rightPCount = 0, leftPCount = 0, rightBCount = 0, leftBCount = 0, rightWCount = 0, leftWCount = 0;
 }

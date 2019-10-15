@@ -43,15 +43,12 @@ int main(int argc, char** argv)
 		try
 		{
 			Checker checky(fileLocation);
-			for (int i = 0; i < checky.symbolStack->head + 1; ++i)
-			{
-				cout << checky.symbolStack->sArray[i] << endl;
-			}
+			cout << "All good bro.\n";
 		}
 		catch (runtime_error e)
 		{
 			cout << e.what() << endl;
-			cout << "The program will now exit." << endl;
+			//cout << "The program will now exit." << endl;
 			return 0;
 		}
 		//see if the user would like to enter another file
