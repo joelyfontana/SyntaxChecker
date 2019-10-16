@@ -62,11 +62,9 @@ void Checker::readFile(string inFileName)
 				if (inQuotes == false)
 				{
 					inQuotes = true;
-					//cout << "true" << endl;
 				}
 				else
 				{
-					//cout << "false" << endl;
 					inQuotes = false;
 				}
 			}
@@ -117,12 +115,12 @@ void Checker::readFile(string inFileName)
 		cout << "lineNum: " << lineNum << " " << line << endl;
 
 	}
-	cout << "leftPCount: " << leftPCount << endl;
-	cout << "rightPCount: " << rightPCount << endl;
-	cout << "leftBCount: " << leftBCount << endl;
-	cout << "rightBCount: " << rightBCount << endl;
-	cout << "leftWCount: " << leftWCount << endl;
-	cout << "rightWCount: " << rightWCount << endl;
+	//cout << "leftPCount: " << leftPCount << endl;
+	//cout << "rightPCount: " << rightPCount << endl;
+	//cout << "leftBCount: " << leftBCount << endl;
+	//cout << "rightBCount: " << rightBCount << endl;
+	//cout << "leftWCount: " << leftWCount << endl;
+	//cout << "rightWCount: " << rightWCount << endl;
 }
 
 //void Checker::checkDelim()
@@ -297,12 +295,12 @@ void Checker::checkDelim2()
 				}
 				else if(symbolStack->sArray[i] == '}')
 					{
-					cout << "Expected ')', found '}' at line " << locationStack->sArray[i+1]<<endl;
+					cout << "Expected ')', found '}' at line " << locationStack->sArray[i]+1<<endl;
 					throw runtime_error(message);
 					}
 				else if (symbolStack->sArray[i] == ']')
 				{
-					cout << "Expected ')', found ']'at line " << locationStack->sArray[i+1]<< endl;
+					cout << "Expected ')', found ']'at line " << locationStack->sArray[i]+1<< endl;
 					throw runtime_error(message);
 				}
 			}
@@ -314,12 +312,12 @@ void Checker::checkDelim2()
 				}
 				else if (symbolStack->sArray[i] == ')')
 				{
-					cout << "Expected '}', found ')'at line " << locationStack->sArray[i + 1] << endl;
+					cout << "Expected '}', found ')'at line " << locationStack->sArray[i]+1 << endl;
 					throw runtime_error(message);
 				}
 				else if (symbolStack->sArray[i] == ']')
 				{
-					cout << "Expected '}', found ']'at line " << locationStack->sArray[i + 1] << endl;
+					cout << "Expected '}', found ']'at line " << locationStack->sArray[i]+1 << endl;
 					throw runtime_error(message);
 				}
 			}
@@ -331,12 +329,12 @@ void Checker::checkDelim2()
 				}
 				else if (symbolStack->sArray[i] == '}')
 				{
-					cout << "Expected ']', found '}'at line " << locationStack->sArray[i + 1] << endl;
+					cout << "Expected ']', found '}'at line " << locationStack->sArray[i]+1 << endl;
 					throw runtime_error(message);
 				}
 				else if (symbolStack->sArray[i] == ')')
 				{
-					cout << "Expected ']', found ')'at line " << locationStack->sArray[i + 1] << endl;
+					cout << "Expected ']', found ')'at line " << locationStack->sArray[i]+1 << endl;
 					throw runtime_error(message);
 				}
 			}
